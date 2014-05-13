@@ -90,7 +90,7 @@ describe('rest', function () {
         it('put comments[1] to the blogpost', function (done) {
 
             request(app)
-                .put('/rest/blogpost/' + id+'/comments/1')
+                .put('/rest/blogpost/' + id +'/comments/1')
                 .set('Content-Type', 'application/json')
                 .send(json(
                         {title:'Yup', body:'Do you like my body?'}
@@ -122,10 +122,17 @@ describe('rest', function () {
                     res.should.have.status(200);
                     res.should.have.property('body');
                     res.body.should.have.property('payload');
-                    res.body.payload.should.have.lengthOf(3);
-                    res.body.payload[2].should.have.property('title', 'YupYup');
+                    //res.body.payload.should.have.lengthOf(3);
+                    res.body.payload.should.have.property('title', 'YupYup');
 
-                    done();
+                    request(app)
+                        .get('/rest/blogpost/' + id +'/comments')
+                        .end(function (err, res) {
+                            res.should.have.property('body');
+                            res.body.payload.should.have.lengthOf(3);
+
+                            done();
+                        });
 
                 });
 
@@ -168,7 +175,7 @@ describe('rest', function () {
 
         });
         it('should be accessible from an url with an index and use a transformer', function (done) {
-            request(app).get('/rest/blogpost/' + id + '/comments/1?transform=labelval').end(function (err, res) {
+            request(app).get('/rest/blogpost/' + id + '/comments/0?transform=labelval').end(function (err, res) {
 
 
                 res.should.have.status(200);
